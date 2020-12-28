@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_frame"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="ui.browser.BrowserFragment">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/browse_fragment"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="guinea.diego.launchervideoinnovation.ui.browser.BrowserFragment"/>
+        android:text="Hello diego" />
 
 </FrameLayout>
