@@ -22,4 +22,4 @@ data class Proyectos(
     var foto: String
 ): Serializable
 
-class Values(var categorias: List<Categoria>,var proyectos: List<Proyectos>)
+data class Values(var categorias: List<Categoria>,var proyectos: List<Proyectos>)

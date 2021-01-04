@@ -1,6 +1,6 @@
 package guinea.diego.launchervideoinnovation.data
 
-import RetrofitInitializer
+import guinea.diego.launchervideoinnovation.data.remoto.RetrofitInitializer
 import guinea.diego.launchervideoinnovation.data.models.Values
 import guinea.diego.launchervideoinnovation.utils.BaseCallback
 import retrofit2.Call
@@ -18,7 +18,6 @@ class ValuesTVRepository() {
                     callback.onError(Error("NO HAY DATOS"))
                 } else {
                     callback.onResult(response.body()!!)
-
                 }
             }
             override fun onFailure(call: Call<Values>, t: Throwable) {

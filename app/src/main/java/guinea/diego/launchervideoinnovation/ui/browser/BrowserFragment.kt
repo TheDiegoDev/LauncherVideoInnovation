@@ -1,9 +1,9 @@
 package guinea.diego.launchervideoinnovation.ui.browser
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
@@ -12,18 +12,20 @@ import androidx.leanback.widget.ListRowPresenter
 import androidx.lifecycle.Observer
 import guinea.diego.launchervideoinnovation.R
 import guinea.diego.launchervideoinnovation.data.models.Categoria
-import guinea.diego.launchervideoinnovation.data.models.PhotoItem
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.data.models.Values
-import guinea.diego.launchervideoinnovation.utils.Constants.NUM_ROWS
 import guinea.diego.launchervideoinnovation.utils.Constants.TITLE_BROWSER
 import org.koin.android.ext.android.inject
 
 
 class BrowserFragment : BrowseSupportFragment() {
+
+    companion object {
+        const val TAG = "BrowserFragment"
+    }
+    var values: Values? = null
     private var mRowsAdapter: ArrayObjectAdapter? = null
     private val viewModel by inject<BrowserFragmentViewModel>()
-    //private val viewModel = BrowserFragmentViewModel()
     private val proyectos: ArrayList<Proyectos> = arrayListOf()
     private val categorias: ArrayList<Categoria> = arrayListOf()
 
@@ -34,22 +36,24 @@ class BrowserFragment : BrowseSupportFragment() {
         ObserverMLD()
         //set the title and badgeDrawable
         setUpBrowser()
-        //set the rows, categories and content
-        setupRows()
+
+
     }
 
-    @SuppressLint("FragmentLiveDataObserve")
     private fun ObserverMLD() {
-        viewModel.valuesViewMLD.observe( this, Observer {
+        viewModel.valuesViewMLD.observe( viewLifecycleOwner , Observer {
             Respuesta(it)
         })
+
     }
 
     private fun Respuesta(respuesta: Values) {
+        values = respuesta
         proyectos.addAll(respuesta.proyectos)
         categorias.addAll(respuesta.categorias)
         CardPresenter().setData(respuesta.proyectos as ArrayList<Proyectos>,
             respuesta.categorias as ArrayList<Categoria>)
+        setupRows()
     }
 
     private fun setUpBrowser() {
@@ -62,25 +66,26 @@ class BrowserFragment : BrowseSupportFragment() {
 
     private fun setupRows() {
         val lrp = ListRowPresenter()
-
         mRowsAdapter = ArrayObjectAdapter(lrp)
-        // For good performance, it's important to use a single instance of
-        // a card presenter for all rows using that presenter.
-        val cardPresenter = CardPresenter()
 
-        for (i in 0 until NUM_ROWS) {
-            val listRowAdapter = ArrayObjectAdapter(cardPresenter)
-//            listRowAdapter.add(Proyectos(proyectos[i].id, "${proyectos[i].titulo}","${proyectos[i].descripcion}",
-//                "${proyectos[i].categoria}","${proyectos[i].VideoPresentacion}","${proyectos[i].VideoEntero}",
-//                "${proyectos[i].foto}"))
-            listRowAdapter.add(PhotoItem("Testing 2", "anything here 2", ContextCompat.getDrawable(requireContext(),R.drawable.splashscreen)))
-            //listRowAdapter.add(PhotoItem("Testing 3", "anything here 3", ContextCompat.getDrawable(requireContext(),R.drawable.movie)))
+        var i = 0
+        val categorias = getCategories()
+        Log.d(TAG, "Ctegorias: $categorias")
 
-            val header = HeaderItem(i.toLong(), "categoria $i")
+        categorias.forEach{ category ->
+            val listRowAdapter = ArrayObjectAdapter(CardPresenter()).apply {
+                val proyectsFromCategory = getProyectsByCategory(category)
+                Log.d(TAG, "moviesFromCategory: $proyectsFromCategory")
+                addAll(0,proyectsFromCategory)
+            }
+            HeaderItem(i.toLong(),category).also { header ->
+                mRowsAdapter?.add(ListRow(header, listRowAdapter))
+            }
+            i++
 
-            mRowsAdapter!!.add(ListRow(header, listRowAdapter))
         }
         adapter = mRowsAdapter
     }
-
+    private fun getCategories() = proyectos.distinctBy { it.categoria }.map { it.categoria }
+    private fun getProyectsByCategory(category: String) = proyectos.filter { it.categoria == category }
 }

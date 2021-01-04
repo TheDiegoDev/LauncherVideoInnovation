@@ -1,4 +1,4 @@
 package guinea.diego.launchervideoinnovation.data
 
 
-const val PrincipalRepo = "https://run.mocky.io/v3/"
+const val PrincipalRepo = "https://androidtv.free.beeceptor.com/"

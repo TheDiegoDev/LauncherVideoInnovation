@@ -6,7 +6,7 @@ import retrofit2.http.*
 
 
 interface ValuesService {
-    @GET("725f24ab-05e1-4134-a34c-19154b00f018")
+    @GET("prueba1")
     fun callProyect() : Call<Values>
 }
 

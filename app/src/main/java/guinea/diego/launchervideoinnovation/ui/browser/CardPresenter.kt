@@ -13,9 +13,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.ViewTarget
 import guinea.diego.launchervideoinnovation.R
 import guinea.diego.launchervideoinnovation.data.models.Categoria
-import guinea.diego.launchervideoinnovation.data.models.PhotoItem
+
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
-import okhttp3.internal.notifyAll
+
 
 
 
@@ -32,7 +32,7 @@ class CardPresenter : Presenter() {
         categoriasData.clear()
         proyectosData.addAll(proyectos)
         categoriasData.addAll(categoria)
-        notifyAll()
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder? {
@@ -44,10 +44,10 @@ class CardPresenter : Presenter() {
         return MyViewHolder(imageCardView)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder?, photoItem: Any?) {
-        photoItem as PhotoItem
+    override fun onBindViewHolder(viewHolder: ViewHolder?, item: Any?) {
+        item as Proyectos
         viewHolder as MyViewHolder
-        viewHolder.bind(photoItem)
+        viewHolder.bind(item)
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder?) {
@@ -55,25 +55,35 @@ class CardPresenter : Presenter() {
     }
 
     class MyViewHolder(val imageCardView: ImageCardView) : ViewHolder(imageCardView) {
-        private val CARD_WIDTH = 250
-        private val CARD_HEIGHT = 150
-        fun bind(photoItem: PhotoItem) = with(imageCardView) {
-            titleText = photoItem.title
-            contentText = photoItem.description
 
-            setMainImageDimensions(CARD_WIDTH * 2, CARD_HEIGHT * 2)
-            setUpImage(photoItem)
+        private var CARD_WIDTH = 250
+        private var CARD_HEIGHT = 150
 
+
+        fun bind(photoItem: Proyectos) = with(imageCardView) {
+            titleText = photoItem.titulo
+            contentText = photoItem.descripcion
+
+            if(photoItem.categoria == "Noticias"){
+                CARD_WIDTH = 200
+                CARD_HEIGHT = 100
+                setMainImageDimensions(CARD_WIDTH * 2, CARD_HEIGHT * 2)
+                setUpImage(photoItem)
+            }else if(photoItem.categoria == "Proyectos"){
+                CARD_WIDTH = 250
+                CARD_HEIGHT = 250
+                setMainImageDimensions(CARD_WIDTH * 2, CARD_HEIGHT * 2)
+                setUpImage(photoItem)
+            }else{
+                setMainImageDimensions(CARD_WIDTH * 2, CARD_HEIGHT * 2)
+                setUpImage(photoItem)
+            }
         }
 
-        private fun setUpImage(photoItem: PhotoItem): ViewTarget<ImageView, Drawable> {
+        private fun setUpImage(photoItem: Proyectos): ViewTarget<ImageView, Drawable> {
             return Glide.with(view.context)
-                .load(photoItem.photo)
+                .load(photoItem.foto)
                 .into(imageCardView.mainImageView)
         }
-
-
     }
-
-
 }
