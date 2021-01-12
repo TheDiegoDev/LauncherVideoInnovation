@@ -30,5 +30,7 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.detail.DetailActivity" />
+        <activity android:name=".ui.playback.PlaybackActivity" />
     </application>
 </manifest>
