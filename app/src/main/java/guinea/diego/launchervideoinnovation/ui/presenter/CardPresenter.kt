@@ -1,4 +1,4 @@
-package guinea.diego.launchervideoinnovation.ui.browser
+package guinea.diego.launchervideoinnovation.ui.presenter
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable

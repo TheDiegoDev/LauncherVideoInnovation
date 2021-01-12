@@ -1,13 +1,11 @@
-package guinea.diego.launchervideoinnovation.ui.browser
+package guinea.diego.launchervideoinnovation.ui.playback
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import guinea.diego.launchervideoinnovation.data.ValuesTVRepository
-import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.data.models.Values
 import guinea.diego.launchervideoinnovation.utils.BaseCallback
 
-class BrowserFragmentViewModel: ViewModel() {
+class PlaybackViewModel: ViewModel() {
     private val repositorio = Single.tvRepository()
     val valuesViewMLD = MutableLiveData<Values>()
     val errorViewMLD = MutableLiveData<Error>()
