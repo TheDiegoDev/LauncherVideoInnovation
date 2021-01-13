@@ -8,8 +8,6 @@ import androidx.leanback.media.MediaPlayerAdapter
 import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.PlaybackControlsRow
 import androidx.lifecycle.Observer
-import com.google.android.youtube.player.YouTubeStandalonePlayer
-import guinea.diego.launchervideoinnovation.data.Api_Key
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import org.koin.android.ext.android.inject
 
@@ -55,19 +53,16 @@ class PlaybackFragment: VideoSupportFragment() {
     }
 
     private fun setupView() {
-//        val playerAdapter = MediaPlayerAdapter(activity)
-//        playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
-//
-//        transportControlGlue = PlaybackTransportControlGlue(activity, playerAdapter)
-//        transportControlGlue.host = VideoSupportFragmentGlueHost(this)
-//        transportControlGlue.title = video.titulo
-//        transportControlGlue.subtitle = video.descripcion
-//        transportControlGlue.playWhenPrepared()
-//
-//        playerAdapter.setDataSource(Uri.parse(video.VideoEntero))
+        val playerAdapter = MediaPlayerAdapter(activity)
+        playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
 
-        val intent = YouTubeStandalonePlayer.createVideoIntent(this.activity, Api_Key, video.VideoEntero)
-        startActivity(intent)
+        transportControlGlue = PlaybackTransportControlGlue(activity, playerAdapter)
+        transportControlGlue.host = VideoSupportFragmentGlueHost(this)
+        transportControlGlue.title = video.titulo
+        transportControlGlue.subtitle = video.descripcion
+        transportControlGlue.playWhenPrepared()
+
+        playerAdapter.setDataSource(Uri.parse(video.VideoEntero))
     }
 
 }

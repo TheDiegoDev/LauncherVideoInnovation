@@ -1,11 +1,13 @@
 package guinea.diego.launchervideoinnovation.ui.home
 
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -18,13 +20,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import guinea.diego.launchervideoinnovation.R
+import guinea.diego.launchervideoinnovation.utils.showLoadingDialog
 import guinea.diego.launchervideoinnovation.data.models.Categoria
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.data.models.Values
-import guinea.diego.launchervideoinnovation.ui.browser.IconHeaderItemPresenter
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
 import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
+import guinea.diego.launchervideoinnovation.ui.presenter.IconHeaderItemPresenter
 import guinea.diego.launchervideoinnovation.utils.Constants.TITLE_BROWSER
+
 import org.koin.android.ext.android.inject
 
 
@@ -33,6 +37,7 @@ class BrowserFragment : BrowseSupportFragment() {
     companion object {
         const val TAG = "BrowserFragment"
     }
+    val displayMetrics = DisplayMetrics()
     private lateinit var backgroundManager: BackgroundManager
     private var defaultBackground: Drawable? = null
     private lateinit var metrics: DisplayMetrics
@@ -41,6 +46,7 @@ class BrowserFragment : BrowseSupportFragment() {
     private val viewModel by inject<BrowserFragmentViewModel>()
     private val proyectos: ArrayList<Proyectos> = arrayListOf()
     private val categorias: ArrayList<Categoria> = arrayListOf()
+    private var loadingDialog: Dialog? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,6 +54,19 @@ class BrowserFragment : BrowseSupportFragment() {
         viewModel.getAllData()
         ObserverMLD()
         setUpBrowser()
+        showDialog()
+    }
+    private fun showDialog() {
+        hideLoading()
+        loadingDialog = activity?.showLoadingDialog()
+    }
+    private fun hideLoading() {
+        loadingDialog?.let { if (it.isShowing) it.cancel() }
+    }
+    private fun stopAnimacion() {
+        Handler().postDelayed({
+            hideLoading()
+        }, 1)
     }
 
     private fun ObserverMLD() {
@@ -57,6 +76,7 @@ class BrowserFragment : BrowseSupportFragment() {
     }
 
     private fun Respuesta(respuesta: Values) {
+        stopAnimacion()
         values = respuesta
         proyectos.addAll(respuesta.proyectos)
         categorias.addAll(respuesta.categorias)
@@ -67,7 +87,7 @@ class BrowserFragment : BrowseSupportFragment() {
 
     private fun setUpBrowser() {
         title = TITLE_BROWSER;
-        badgeDrawable = activity?.resources?.getDrawable(R.drawable.logo3);
+        badgeDrawable = activity?.resources?.getDrawable(R.drawable.speed);
         setHeaderPresenterSelector(object: PresenterSelector(){
             override fun getPresenter(item: Any?): Presenter {
                 return IconHeaderItemPresenter()
@@ -134,25 +154,26 @@ class BrowserFragment : BrowseSupportFragment() {
             }
         }
     }
-//    private fun updateBackground(uri: String) {
-//        val width = 300 //metrics.widthPixels
-//        val height =  300 // metrics.heightPixels
-//
-//        val options = RequestOptions()
-//            .centerCrop()
-//            .error(defaultBackground)
-//
-//        Glide.with(this)
-//            .asBitmap()
-//            .load(uri)
-//            .apply(options)
-//            .into(object: SimpleTarget<Bitmap>(width, height) {
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: Transition<in Bitmap>?
-//                ) {
-//                    backgroundManager.setBitmap(resource)
-//                }
-//            })
-//    }
+    private fun updateBackground(uri: String) {
+
+        val width = 16000//displayMetrics.widthPixels//metrics.widthPixels
+        val height = 16000//displayMetrics.heightPixels // metrics.heightPixels
+
+        val options = RequestOptions()
+            .centerCrop()
+            .error(defaultBackground)
+
+        Glide.with(this)
+            .asBitmap()
+            .load(uri)
+            .apply(options)
+            .into(object: SimpleTarget<Bitmap>(width, height) {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    backgroundManager.setBitmap(resource)
+                }
+            })
+    }
 }

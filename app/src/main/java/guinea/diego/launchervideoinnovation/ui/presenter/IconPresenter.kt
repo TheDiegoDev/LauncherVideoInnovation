@@ -1,4 +1,4 @@
-package guinea.diego.launchervideoinnovation.ui.browser
+package guinea.diego.launchervideoinnovation.ui.presenter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.leanback.widget.RowHeaderPresenter
 import guinea.diego.launchervideoinnovation.R
 import kotlin.properties.Delegates
 
-class IconHeaderItemPresenter: RowHeaderPresenter() {
+class IconHeaderItemPresenter(): RowHeaderPresenter() {
 
 
     private var unselectedAlpha: Float by Delegates.notNull()
@@ -36,11 +36,19 @@ class IconHeaderItemPresenter: RowHeaderPresenter() {
         val label = rootView.findViewById<TextView>(R.id.header_label)
         rootView.isFocusable = true
 
-        val icon = rootView.resources.getDrawable(R.drawable.logo3, null)
-        iconView.setImageDrawable(icon)
-
         val headerItem = (item as ListRow).headerItem
         label.text = headerItem.name
+
+        if (headerItem.name == "Proyectos"){
+            val icon = rootView.resources.getDrawable(R.drawable.proyecto, null)
+            iconView.setImageDrawable(icon)
+        }else if(headerItem.name == "Noticias"){
+            val icon = rootView.resources.getDrawable(R.drawable.noticias, null)
+            iconView.setImageDrawable(icon)
+        }else{
+            val icon = rootView.resources.getDrawable(R.drawable.video, null)
+            iconView.setImageDrawable(icon)
+        }
     }
 
     override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {
