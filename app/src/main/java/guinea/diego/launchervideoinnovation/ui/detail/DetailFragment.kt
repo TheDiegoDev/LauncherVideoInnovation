@@ -30,8 +30,6 @@ class DetailFragment: DetailsFragment() {
 
     companion object {
         const val ACTION_WATCH_TRAILER = 1
-        const val ACTION_RENT = 2
-        const val ACTION_BUY = 3
     }
 
     private lateinit var backgroundManager: BackgroundManager
@@ -101,6 +99,7 @@ class DetailFragment: DetailsFragment() {
         val options = RequestOptions()
                 .error(R.drawable.default_background)
                 .dontAnimate()
+        //FOTO EN LA PANTALLA DE DETALLES//
 //
 //        Glide.with(this)
 //                .asBitmap()
