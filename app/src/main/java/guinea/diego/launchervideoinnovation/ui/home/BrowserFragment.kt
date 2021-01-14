@@ -11,6 +11,7 @@ import android.os.Handler
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.*
@@ -37,7 +38,7 @@ class BrowserFragment : BrowseSupportFragment() {
     companion object {
         const val TAG = "BrowserFragment"
     }
-    val displayMetrics = DisplayMetrics()
+
     private lateinit var backgroundManager: BackgroundManager
     private var defaultBackground: Drawable? = null
     private lateinit var metrics: DisplayMetrics
@@ -53,6 +54,7 @@ class BrowserFragment : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getAllData()
         ObserverMLD()
+        prepareBackgroundManager()
         setUpBrowser()
         showDialog()
     }
@@ -142,6 +144,13 @@ class BrowserFragment : BrowseSupportFragment() {
             }
         }
     }
+    private fun prepareBackgroundManager() {
+        backgroundManager = BackgroundManager.getInstance(activity)
+        backgroundManager.attach(activity?.window)
+        defaultBackground = activity?.let { ContextCompat.getDrawable(it, R.drawable.default_background) }
+        metrics = DisplayMetrics()
+        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
+    }
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(
             itemViewHolder: Presenter.ViewHolder?,
@@ -150,15 +159,13 @@ class BrowserFragment : BrowseSupportFragment() {
             row: Row?) {
             if(item is Proyectos) {
                 val backgroundImageUrl = Uri.parse(item.foto)
-                //updateBackground(backgroundImageUrl.toString())
+                updateBackground(backgroundImageUrl.toString())
             }
         }
     }
     private fun updateBackground(uri: String) {
-
-        val width = 16000//displayMetrics.widthPixels//metrics.widthPixels
-        val height = 16000//displayMetrics.heightPixels // metrics.heightPixels
-
+        val width = metrics.widthPixels
+        val height =  metrics.heightPixels
         val options = RequestOptions()
             .centerCrop()
             .error(defaultBackground)
