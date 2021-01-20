@@ -150,9 +150,8 @@ class DetailFragment: DetailsFragment() {
         val foto = activity.intent.getStringExtra("foto")
         val videoP = activity.intent.getStringExtra("videoP")
         val videoE = activity.intent.getStringExtra("videoE")
-        val fotoFondo = activity.intent.getStringExtra("fotofondo")
 
-        video = Proyectos(id,titulo,descripcion,categoria,videoP,videoE,foto,fotoFondo)
+        video = Proyectos(id,titulo,descripcion,categoria,videoP,videoE,foto)
         video.foto?.let { updateBackground(it) }
     }
 

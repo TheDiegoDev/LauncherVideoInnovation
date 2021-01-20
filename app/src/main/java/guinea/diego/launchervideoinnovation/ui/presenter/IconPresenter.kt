@@ -8,13 +8,15 @@ import android.widget.TextView
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.Presenter
 import androidx.leanback.widget.RowHeaderPresenter
+import com.bumptech.glide.Glide
 import guinea.diego.launchervideoinnovation.R
+import guinea.diego.launchervideoinnovation.data.models.Categoria
 import kotlin.properties.Delegates
 
-class IconHeaderItemPresenter(): RowHeaderPresenter() {
-
+class IconHeaderItemPresenter(private val categoria: ArrayList<Categoria>): RowHeaderPresenter() {
 
     private var unselectedAlpha: Float by Delegates.notNull()
+    private var contador = 0
 
     override fun onCreateViewHolder(parent: ViewGroup): Presenter.ViewHolder {
         unselectedAlpha = parent.resources
@@ -39,16 +41,33 @@ class IconHeaderItemPresenter(): RowHeaderPresenter() {
         val headerItem = (item as ListRow).headerItem
         label.text = headerItem.name
 
-        if (headerItem.name == "Proyectos"){
-            val icon = rootView.resources.getDrawable(R.drawable.proyecto, null)
-            iconView.setImageDrawable(icon)
-        }else if(headerItem.name == "Noticias"){
-            val icon = rootView.resources.getDrawable(R.drawable.noticias, null)
-            iconView.setImageDrawable(icon)
-        }else{
-            val icon = rootView.resources.getDrawable(R.drawable.video, null)
-            iconView.setImageDrawable(icon)
+        val num = getInt(headerItem.name)
+
+        Glide.with(iconView.context)
+            .load(categoria[num].icon)
+            .into(iconView)
+//        if (headerItem.name == "Proyectos"){
+//            val icon = rootView.resources.getDrawable(R.drawable.proyecto, null)
+//            iconView.setImageDrawable(icon)
+//
+//        }else if(headerItem.name == "Noticias"){
+//            val icon = rootView.resources.getDrawable(R.drawable.noticias, null)
+//            iconView.setImageDrawable(icon)
+//        }else{
+//            val icon = rootView.resources.getDrawable(R.drawable.video, null)
+//            iconView.setImageDrawable(icon)
+//        }
+    }
+
+    private fun getInt(name: String?): Int {
+      var respuesta = 0
+      categoria.forEach {
+            if (categoria[contador].name == name){
+                respuesta = contador
+            }
+          contador++
         }
+        return respuesta
     }
 
     override fun onUnbindViewHolder(viewHolder: Presenter.ViewHolder) {

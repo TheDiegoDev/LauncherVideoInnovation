@@ -92,7 +92,7 @@ class BrowserFragment : BrowseSupportFragment() {
         badgeDrawable = activity?.resources?.getDrawable(R.drawable.speed);
         setHeaderPresenterSelector(object: PresenterSelector(){
             override fun getPresenter(item: Any?): Presenter {
-                return IconHeaderItemPresenter()
+                return IconHeaderItemPresenter(categorias)
             }
         })
     }
@@ -139,7 +139,6 @@ class BrowserFragment : BrowseSupportFragment() {
                 intent.putExtra("foto", item.foto)
                 intent.putExtra("videoP", item.VideoPresentacion)
                 intent.putExtra("videoE", item.VideoEntero)
-                intent.putExtra("fotoFondo", item.fotoFondo)
                 startActivity(intent)
             }
         }

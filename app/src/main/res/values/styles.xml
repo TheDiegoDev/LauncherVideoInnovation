@@ -6,6 +6,7 @@
         <item name="imageCardViewStyle">@style/MyImageCardViewStyle</item>
         <item name="headerStyle">@style/MyHeaderStyle</item>
         <item name="rowHeaderStyle">@style/MyHeaderStyle</item>
+        <item name="android:fontFamily">@font/monserrat_regular</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -18,11 +19,12 @@
 
     <style name="MyImageCardViewStyle" parent="@style/Widget.Leanback.ImageCardViewStyle">
         <item name="cardType">infoUnderWithExtra</item>
-        <item name="infoAreaBackground">@color/azul</item>
+        <item name="infoAreaBackground">@drawable/background_title</item>
     </style>
 
     <style name="MyHeaderStyle" parent="@style/Widget.Leanback.Header" >
         <item name="android:textAppearance">@style/MyHeaderStyle.MyHeaderText</item>
+        <item name="android:background">@drawable/background_title</item>
     </style>
 
     <style name="MyHeaderStyle.MyHeaderText" parent="TextAppearance.Leanback.Header">

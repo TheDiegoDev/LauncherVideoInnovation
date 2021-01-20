@@ -1,7 +1,9 @@
 package guinea.diego.launchervideoinnovation.ui.presenter
 
+
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -35,12 +37,17 @@ class CardPresenter : Presenter() {
 
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup?): ViewHolder? {
         Log.d(TAG, "onCreateViewHolder")
         val imageCardView = ImageCardView(parent?.context)
         imageCardView.focusable = View.FOCUSABLE
         imageCardView.isFocusableInTouchMode = true
-        imageCardView.findViewById<TextView>(R.id.content_text).setTextColor(Color.BLUE)
+        imageCardView.findViewById<TextView>(R.id.content_text).horizontalScrollbarTrackDrawable
+        imageCardView.findViewById<TextView>(R.id.content_text).setTextColor(Color.WHITE)
+        imageCardView.findViewById<TextView>(R.id.content_text).movementMethod = ScrollingMovementMethod()
+
+//        imageCardView.findViewById<TextView>(R.id.content_text).isScrollbarFadingEnabled
         return MyViewHolder(imageCardView)
     }
 
