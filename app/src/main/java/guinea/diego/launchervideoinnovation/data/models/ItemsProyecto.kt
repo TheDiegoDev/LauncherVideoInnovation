@@ -4,7 +4,8 @@ import java.io.Serializable
 
 data class Categoria(
     var id: Int,
-    var name: String
+    var name: String,
+    var icon: String
 ): Serializable
 data class Proyectos(
     var id: Int,
@@ -13,8 +14,7 @@ data class Proyectos(
     var categoria: String?,
     var VideoPresentacion: String?,
     var VideoEntero: String?,
-    var foto: String?,
-    var fotoFondo: String?
+    var foto: String?
 ): Serializable
 
 data class Values(var categorias: List<Categoria>,var proyectos: List<Proyectos>)
