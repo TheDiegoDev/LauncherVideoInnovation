@@ -14,7 +14,8 @@ data class Proyectos(
     var categoria: String?,
     var VideoPresentacion: String?,
     var VideoEntero: String?,
-    var foto: String?
+    var foto: String?,
+    var accion: String?
 ): Serializable
 
 data class Values(var categorias: List<Categoria>,var proyectos: List<Proyectos>)

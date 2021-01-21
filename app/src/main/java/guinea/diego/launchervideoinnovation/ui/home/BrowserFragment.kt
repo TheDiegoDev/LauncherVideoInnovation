@@ -139,6 +139,7 @@ class BrowserFragment : BrowseSupportFragment() {
                 intent.putExtra("foto", item.foto)
                 intent.putExtra("videoP", item.VideoPresentacion)
                 intent.putExtra("videoE", item.VideoEntero)
+                intent.putExtra("accion", item.accion)
                 startActivity(intent)
             }
         }

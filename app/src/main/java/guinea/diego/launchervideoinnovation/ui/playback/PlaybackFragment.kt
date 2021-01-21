@@ -1,7 +1,9 @@
 package guinea.diego.launchervideoinnovation.ui.playback
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.leanback.app.VideoSupportFragment
 import androidx.leanback.app.VideoSupportFragmentGlueHost
 import androidx.leanback.media.MediaPlayerAdapter
@@ -9,6 +11,9 @@ import androidx.leanback.media.PlaybackTransportControlGlue
 import androidx.leanback.widget.PlaybackControlsRow
 import androidx.lifecycle.Observer
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
+import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
+import guinea.diego.launchervideoinnovation.ui.home.HomeActivity
+import guinea.diego.launchervideoinnovation.ui.webView.WebView
 import org.koin.android.ext.android.inject
 
 
@@ -53,16 +58,18 @@ class PlaybackFragment: VideoSupportFragment() {
     }
 
     private fun setupView() {
-        val playerAdapter = MediaPlayerAdapter(activity)
-        playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
+            val playerAdapter = MediaPlayerAdapter(activity)
+            playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
 
-        transportControlGlue = PlaybackTransportControlGlue(activity, playerAdapter)
-        transportControlGlue.host = VideoSupportFragmentGlueHost(this)
-        transportControlGlue.title = video.titulo
-        transportControlGlue.subtitle = video.descripcion
-        transportControlGlue.playWhenPrepared()
+            transportControlGlue = PlaybackTransportControlGlue(activity, playerAdapter)
+            transportControlGlue.host = VideoSupportFragmentGlueHost(this)
+            transportControlGlue.title = video.titulo
+            transportControlGlue.subtitle = video.descripcion
+            transportControlGlue.playWhenPrepared()
 
-        playerAdapter.setDataSource(Uri.parse(video.VideoEntero))
+            playerAdapter.setDataSource(Uri.parse(video.VideoEntero))
+
+
     }
 
 }
