@@ -3,9 +3,11 @@ package guinea.diego.launchervideoinnovation.ui.detail
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -14,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.DetailsFragment
 import androidx.leanback.widget.*
-import androidx.lifecycle.Observer
 import guinea.diego.launchervideoinnovation.R
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity.Companion.KEY_VIDEO
@@ -22,8 +23,10 @@ import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailOverviewLogoPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailsDescriptionPresenter
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity.Companion.SHARED_ELEMENT_NAME
+import guinea.diego.launchervideoinnovation.ui.home.HomeActivity
 import guinea.diego.launchervideoinnovation.ui.playback.PlaybackActivity
-import org.koin.android.ext.android.inject
+import guinea.diego.launchervideoinnovation.ui.webView.WebView
+import kotlinx.coroutines.awaitCancellation
 
 
 class DetailFragment: DetailsFragment() {
@@ -34,7 +37,7 @@ class DetailFragment: DetailsFragment() {
 
     private lateinit var backgroundManager: BackgroundManager
     private lateinit var metrics: DisplayMetrics
-    private lateinit var video: Proyectos
+    private lateinit var proyectos: Proyectos
     private lateinit var mAdapter: ArrayObjectAdapter
     private var defaultBackground: Drawable? = null
 
@@ -70,17 +73,27 @@ class DetailFragment: DetailsFragment() {
         val helper = FullWidthDetailsOverviewSharedElementHelper()
         helper.setSharedElementEnterTransition(activity, SHARED_ELEMENT_NAME)
 
+        //Cambiar por un webview
+
         val detailsRowPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter(), DetailOverviewLogoPresenter())
-        detailsRowPresenter.backgroundColor = ContextCompat.getColor(activity, R.color.black)
+        detailsRowPresenter.backgroundColor = ContextCompat.getColor(activity, R.color.azul) //color del fondo
         detailsRowPresenter.initialState = FullWidthDetailsOverviewRowPresenter.STATE_HALF
         detailsRowPresenter.isParticipatingEntranceTransition = false
         prepareEntranceTransition()
         detailsRowPresenter.setListener(helper)
         detailsRowPresenter.setOnActionClickedListener {
             if (it.id.toInt() == ACTION_WATCH_TRAILER) {
-                val intent = Intent(activity, PlaybackActivity::class.java)
-                intent.putExtra("ProyectoId", video.id)
-                startActivity(intent)
+                //BIFURCACION ENTRE CATEGORIAS
+                if(proyectos.categoria == "Noticias"){
+                    val intent = Intent(activity, WebView::class.java)
+                    intent.putExtra("url", proyectos.accion)
+                    startActivity(intent)
+                }else {
+                    val intent = Intent(activity, PlaybackActivity::class.java)
+                    intent.putExtra("ProyectoId", proyectos.id)
+                    startActivity(intent)
+                }
+
             } else {
                 Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()
             }
@@ -94,7 +107,7 @@ class DetailFragment: DetailsFragment() {
     }
 
     private fun setupDetailsOverviewRow() {
-        val detailsOverviewRow = DetailsOverviewRow(video)
+        val detailsOverviewRow = DetailsOverviewRow(proyectos)
 
         val options = RequestOptions()
                 .error(R.drawable.default_background)
@@ -135,7 +148,7 @@ class DetailFragment: DetailsFragment() {
         val header = HeaderItem(0, getString(R.string.related_videos))
         var cardRowAdapter = ArrayObjectAdapter(CardPresenter())
         objetos.forEach {
-            if(!it.titulo.equals(video.titulo)) {
+            if(!it.titulo.equals(proyectos.titulo)) {
                 cardRowAdapter.add(it)
             }
         }
@@ -150,9 +163,10 @@ class DetailFragment: DetailsFragment() {
         val foto = activity.intent.getStringExtra("foto")
         val videoP = activity.intent.getStringExtra("videoP")
         val videoE = activity.intent.getStringExtra("videoE")
+        val accion = activity.intent.getStringExtra("accion")
 
-        video = Proyectos(id,titulo,descripcion,categoria,videoP,videoE,foto)
-        video.foto?.let { updateBackground(it) }
+        proyectos = Proyectos(id,titulo,descripcion,categoria,videoP,videoE,foto,accion)
+        proyectos.foto?.let { updateBackground(it) }
     }
 
     private fun updateBackground(uri: String) {

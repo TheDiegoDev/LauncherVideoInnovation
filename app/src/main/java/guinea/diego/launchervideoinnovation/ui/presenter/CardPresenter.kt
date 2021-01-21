@@ -45,9 +45,8 @@ class CardPresenter : Presenter() {
         imageCardView.isFocusableInTouchMode = true
         imageCardView.findViewById<TextView>(R.id.content_text).horizontalScrollbarTrackDrawable
         imageCardView.findViewById<TextView>(R.id.content_text).setTextColor(Color.WHITE)
-        imageCardView.findViewById<TextView>(R.id.content_text).movementMethod = ScrollingMovementMethod()
+        //Scroll del content
 
-//        imageCardView.findViewById<TextView>(R.id.content_text).isScrollbarFadingEnabled
         return MyViewHolder(imageCardView)
     }
 
