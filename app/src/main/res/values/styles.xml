@@ -24,7 +24,7 @@
 
     <style name="MyHeaderStyle" parent="@style/Widget.Leanback.Header" >
         <item name="android:textAppearance">@style/MyHeaderStyle.MyHeaderText</item>
-        <item name="android:background">@drawable/background_title</item>
+        <item name="android:background">@drawable/titulos</item>
     </style>
 
     <style name="MyHeaderStyle.MyHeaderText" parent="TextAppearance.Leanback.Header">

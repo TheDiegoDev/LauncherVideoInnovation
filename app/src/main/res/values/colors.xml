@@ -8,6 +8,8 @@
     <color name="azul">#1ba1d1</color>
     <color name="azulFuerte">#1608fd</color>
 
+    <color name="colorTransparente">#d1efef</color>
+    <color name="colorNoTransparente">#50bcd8</color>
 
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>

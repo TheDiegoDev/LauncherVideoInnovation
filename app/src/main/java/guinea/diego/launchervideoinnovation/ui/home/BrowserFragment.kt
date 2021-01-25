@@ -5,12 +5,14 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.widget.VideoView
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
@@ -29,8 +31,10 @@ import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
 import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.IconHeaderItemPresenter
 import guinea.diego.launchervideoinnovation.utils.Constants.TITLE_BROWSER
+import kotlinx.android.synthetic.main.fragment_browser.*
 
 import org.koin.android.ext.android.inject
+import org.koin.android.scope.currentScope
 
 
 class BrowserFragment : BrowseSupportFragment() {
@@ -42,6 +46,11 @@ class BrowserFragment : BrowseSupportFragment() {
     private lateinit var backgroundManager: BackgroundManager
     private var defaultBackground: Drawable? = null
     private lateinit var metrics: DisplayMetrics
+
+
+    private lateinit var mediaPlayer: MediaPlayer
+    private var mCurrentVideoPosition: Int = 0
+
     var values: Values? = null
     private var mRowsAdapter: ArrayObjectAdapter? = null
     private val viewModel by inject<BrowserFragmentViewModel>()
@@ -54,8 +63,8 @@ class BrowserFragment : BrowseSupportFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getAllData()
         ObserverMLD()
-        prepareBackgroundManager()
         setUpBrowser()
+
         showDialog()
     }
     private fun showDialog() {
@@ -90,6 +99,7 @@ class BrowserFragment : BrowseSupportFragment() {
     private fun setUpBrowser() {
         title = TITLE_BROWSER;
         badgeDrawable = activity?.resources?.getDrawable(R.drawable.speed);
+        prepareBackgroundManager()
         setHeaderPresenterSelector(object: PresenterSelector(){
             override fun getPresenter(item: Any?): Presenter {
                 return IconHeaderItemPresenter(categorias)
@@ -144,10 +154,39 @@ class BrowserFragment : BrowseSupportFragment() {
             }
         }
     }
+
+//    override fun onPause() {
+//        super.onPause()
+//        mCurrentVideoPosition = mediaPlayer.currentPosition
+//        videoView.pause()
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        videoView.start()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        mediaPlayer.release()
+//    }
+
     private fun prepareBackgroundManager() {
+//        videoView.prepare(Uri.parse("https://ak.picdn.net/shutterstock/videos/1054816568/preview/stock-footage-diver-jumping-in-the-water-from-boat-underwater-diving-scenery-slow-motion-ocean-scenery-sun-beams.webm"))
+//        videoView.setVideoURI(Uri.parse("https://ak.picdn.net/shutterstock/videos/1054816568/preview/stock-footage-diver-jumping-in-the-water-from-boat-underwater-diving-scenery-slow-motion-ocean-scenery-sun-beams.webm" ))
+//        videoView.start()
+//        videoView.setOnPreparedListener { mp ->
+//            mediaPlayer = mp
+//            mediaPlayer.isLooping = true
+//
+//            if(mCurrentVideoPosition != 0){
+//                mediaPlayer.seekTo(mCurrentVideoPosition)
+//                mediaPlayer.start()
+//            }
+//        }
         backgroundManager = BackgroundManager.getInstance(activity)
         backgroundManager.attach(activity?.window)
-        defaultBackground = activity?.let { ContextCompat.getDrawable(it, R.drawable.default_background) }
+        defaultBackground = activity?.let { ContextCompat.getDrawable(it, R.drawable.background_title) }
         metrics = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
     }
