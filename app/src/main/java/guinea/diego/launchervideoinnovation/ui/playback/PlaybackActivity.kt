@@ -1,19 +1,28 @@
 package guinea.diego.launchervideoinnovation.ui.playback
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import guinea.diego.launchervideoinnovation.R
+import kotlinx.android.synthetic.main.exoplayerview.*
 
 
 class PlaybackActivity: FragmentActivity() {
 
-    companion object {
-        const val KEY_VIDEO = "VIDEO"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportFragmentManager.beginTransaction()
-                .replace(android.R.id.content, PlaybackFragment())
-                .commit()
+        setContentView(R.layout.exoplayerview)
+        val url = this.intent.getStringExtra("videoUrl")
+        videoReproductor.prepare(Uri.parse(url))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoReproductor.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        videoReproductor.onResume()
     }
 }

@@ -40,7 +40,6 @@ class DetailFragment: DetailsFragment() {
     private lateinit var proyectos: Proyectos
     private lateinit var mAdapter: ArrayObjectAdapter
     private var defaultBackground: Drawable? = null
-
     private val objetos: ArrayList<Proyectos> = arrayListOf()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -86,11 +85,12 @@ class DetailFragment: DetailsFragment() {
                 //BIFURCACION ENTRE CATEGORIAS
                 if(proyectos.categoria == "Noticias"){
                     val intent = Intent(activity, WebView::class.java)
+                    intent.putExtra("titulo", proyectos.titulo)
                     intent.putExtra("url", proyectos.accion)
                     startActivity(intent)
                 }else {
                     val intent = Intent(activity, PlaybackActivity::class.java)
-                    intent.putExtra("ProyectoId", proyectos.id)
+                    intent.putExtra("videoUrl", proyectos.VideoEntero)
                     startActivity(intent)
                 }
 
@@ -110,7 +110,7 @@ class DetailFragment: DetailsFragment() {
         val detailsOverviewRow = DetailsOverviewRow(proyectos)
 
         val options = RequestOptions()
-                .error(R.drawable.default_background)
+                .error(R.drawable.background_title)
                 .dontAnimate()
         //FOTO EN LA PANTALLA DE DETALLES//
 //

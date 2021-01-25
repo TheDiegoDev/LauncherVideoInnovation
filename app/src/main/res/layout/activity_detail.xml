@@ -6,4 +6,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:name="guinea.diego.launchervideoinnovation.ui.detail.DetailFragment"
-    tools:context=".ui.detail.DetailActivity"/>
+    tools:context=".ui.detail.DetailActivity" />
