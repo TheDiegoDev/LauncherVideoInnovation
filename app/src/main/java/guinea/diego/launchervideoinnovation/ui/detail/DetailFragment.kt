@@ -39,6 +39,7 @@ class DetailFragment: DetailsFragment() {
     private lateinit var metrics: DisplayMetrics
     private lateinit var proyectos: Proyectos
     private lateinit var mAdapter: ArrayObjectAdapter
+    private lateinit var mButton: String
     private var defaultBackground: Drawable? = null
     private val objetos: ArrayList<Proyectos> = arrayListOf()
 
@@ -75,7 +76,7 @@ class DetailFragment: DetailsFragment() {
         //Cambiar por un webview
 
         val detailsRowPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter(), DetailOverviewLogoPresenter())
-        detailsRowPresenter.backgroundColor = ContextCompat.getColor(activity, R.color.azul) //color del fondo
+        detailsRowPresenter.backgroundColor = ContextCompat.getColor(activity, R.color.colorNoTransparente) //color del fondo
         detailsRowPresenter.initialState = FullWidthDetailsOverviewRowPresenter.STATE_HALF
         detailsRowPresenter.isParticipatingEntranceTransition = false
         prepareEntranceTransition()
@@ -130,8 +131,8 @@ class DetailFragment: DetailsFragment() {
         val actionAdapter = SparseArrayObjectAdapter()
         actionAdapter.set(ACTION_WATCH_TRAILER,
                 Action(ACTION_WATCH_TRAILER.toLong(),
-                        getString(R.string.watch_trailer_1),
-                        getString(R.string.watch_trailer_2)))
+                        mButton,
+                        ""))
 //        actionAdapter.set(ACTION_RENT,
 //                Action(ACTION_RENT.toLong(),
 //                        getString(R.string.rent_1),
@@ -165,8 +166,22 @@ class DetailFragment: DetailsFragment() {
         val videoE = activity.intent.getStringExtra("videoE")
         val accion = activity.intent.getStringExtra("accion")
 
+
+
         proyectos = Proyectos(id,titulo,descripcion,categoria,videoP,videoE,foto,accion)
+        confgButton()
         proyectos.foto?.let { updateBackground(it) }
+    }
+
+    private fun confgButton() {
+        if(proyectos.categoria == "Noticias"){
+            mButton = "Ver Noticia"
+        }else if (proyectos.categoria == "Videos"){
+            mButton = "Reproducir"
+        }else{
+            mButton = "Descargar"
+        }
+
     }
 
     private fun updateBackground(uri: String) {

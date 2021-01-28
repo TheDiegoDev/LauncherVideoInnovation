@@ -13,17 +13,24 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
-class ExoPlayerView @JvmOverloads constructor(context: Context,attrs: AttributeSet? = null, defSystem: Int = 0)
-    :FrameLayout(context,attrs,defSystem), Player.EventListener {
+class ExoPlayerView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defSystem: Int = 0
+)
+    :FrameLayout(context, attrs, defSystem), Player.EventListener {
 
         private var simpleExoPlayer: SimpleExoPlayer
 
         init {
             val playerView = PlayerView(context)
+            playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+            playerView.useController = false
             addView(playerView)
 
             simpleExoPlayer = SimpleExoPlayer.Builder(context).build()
@@ -33,8 +40,13 @@ class ExoPlayerView @JvmOverloads constructor(context: Context,attrs: AttributeS
         }
     fun prepare(uri: Uri){
         val timeout = 10000
-        val dataSourceFactory = DefaultHttpDataSourceFactory(Util.getUserAgent(context,"ExoPLayerView"),
-            timeout,timeout,true)
+        val dataSourceFactory = DefaultHttpDataSourceFactory(
+            Util.getUserAgent(
+                context,
+                "ExoPLayerView"
+            ),
+            timeout, timeout, true
+        )
 
         val mediaSource = when(Util.inferContentType(uri)){
             C.TYPE_SS -> SsMediaSource.Factory(dataSourceFactory)

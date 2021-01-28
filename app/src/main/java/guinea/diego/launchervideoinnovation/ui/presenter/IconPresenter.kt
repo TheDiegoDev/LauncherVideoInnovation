@@ -46,17 +46,6 @@ class IconHeaderItemPresenter(private val categoria: ArrayList<Categoria>): RowH
         Glide.with(iconView.context)
             .load(categoria[num].icon)
             .into(iconView)
-//        if (headerItem.name == "Proyectos"){
-//            val icon = rootView.resources.getDrawable(R.drawable.proyecto, null)
-//            iconView.setImageDrawable(icon)
-//
-//        }else if(headerItem.name == "Noticias"){
-//            val icon = rootView.resources.getDrawable(R.drawable.noticias, null)
-//            iconView.setImageDrawable(icon)
-//        }else{
-//            val icon = rootView.resources.getDrawable(R.drawable.video, null)
-//            iconView.setImageDrawable(icon)
-//        }
     }
 
     private fun getInt(name: String?): Int {
