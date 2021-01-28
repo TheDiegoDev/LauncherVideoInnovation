@@ -29,12 +29,13 @@ import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.data.models.Values
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
 import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
+import guinea.diego.launchervideoinnovation.ui.presenter.ExoPlayerView
 import guinea.diego.launchervideoinnovation.ui.presenter.IconHeaderItemPresenter
 import guinea.diego.launchervideoinnovation.utils.Constants.TITLE_BROWSER
-import kotlinx.android.synthetic.main.fragment_browser.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.exoplayerview.*
 
 import org.koin.android.ext.android.inject
-import org.koin.android.scope.currentScope
 
 
 class BrowserFragment : BrowseSupportFragment() {
@@ -47,10 +48,10 @@ class BrowserFragment : BrowseSupportFragment() {
     private var defaultBackground: Drawable? = null
     private lateinit var metrics: DisplayMetrics
 
-
-    private lateinit var mediaPlayer: MediaPlayer
-    private var mCurrentVideoPosition: Int = 0
-
+//    private lateinit var mediaPlayer: MediaPlayer
+//    private var mCurrentVideoPosition: Int = 0
+//  //  private val mediaController = MediaController(context)
+  //  private val videoView = activity?.findViewById<ExoPlayerView>(R.id.videoDeFondo)
     var values: Values? = null
     private var mRowsAdapter: ArrayObjectAdapter? = null
     private val viewModel by inject<BrowserFragmentViewModel>()
@@ -140,6 +141,7 @@ class BrowserFragment : BrowseSupportFragment() {
             item: Any?,
             rowViewHolder: RowPresenter.ViewHolder?,
             row: Row?) {
+
             if (item is Proyectos) {
                 val intent = Intent(activity, DetailActivity::class.java)
                 intent.putExtra("id", item.id)
@@ -154,41 +156,23 @@ class BrowserFragment : BrowseSupportFragment() {
             }
         }
     }
+    override fun onPause() {
+        super.onPause()
+        activity?.videoDeFondo?.onPause()
+    }
 
-//    override fun onPause() {
-//        super.onPause()
-//        mCurrentVideoPosition = mediaPlayer.currentPosition
-//        videoView.pause()
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        videoView.start()
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        mediaPlayer.release()
-//    }
+    override fun onResume() {
+        super.onResume()
+        activity?.videoDeFondo?.onResume()
+    }
 
     private fun prepareBackgroundManager() {
-//        videoView.prepare(Uri.parse("https://ak.picdn.net/shutterstock/videos/1054816568/preview/stock-footage-diver-jumping-in-the-water-from-boat-underwater-diving-scenery-slow-motion-ocean-scenery-sun-beams.webm"))
-//        videoView.setVideoURI(Uri.parse("https://ak.picdn.net/shutterstock/videos/1054816568/preview/stock-footage-diver-jumping-in-the-water-from-boat-underwater-diving-scenery-slow-motion-ocean-scenery-sun-beams.webm" ))
-//        videoView.start()
-//        videoView.setOnPreparedListener { mp ->
-//            mediaPlayer = mp
-//            mediaPlayer.isLooping = true
-//
-//            if(mCurrentVideoPosition != 0){
-//                mediaPlayer.seekTo(mCurrentVideoPosition)
-//                mediaPlayer.start()
-//            }
-//        }
-        backgroundManager = BackgroundManager.getInstance(activity)
-        backgroundManager.attach(activity?.window)
-        defaultBackground = activity?.let { ContextCompat.getDrawable(it, R.drawable.background_title) }
-        metrics = DisplayMetrics()
-        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
+    //  activity?.videoDeFondo?.prepare(Uri.parse("https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"))
+//        backgroundManager = BackgroundManager.getInstance(activity)
+////        backgroundManager.attach(activity?.window)
+////        defaultBackground = activity?.let { ContextCompat.getDrawable(it, R.drawable.background_title) }
+////        metrics = DisplayMetrics()
+////        activity?.windowManager?.defaultDisplay?.getMetrics(metrics)
     }
     private inner class ItemViewSelectedListener : OnItemViewSelectedListener {
         override fun onItemSelected(
@@ -197,29 +181,30 @@ class BrowserFragment : BrowseSupportFragment() {
             rowViewHolder: RowPresenter.ViewHolder?,
             row: Row?) {
             if(item is Proyectos) {
-                val backgroundImageUrl = Uri.parse(item.foto)
+                val backgroundImageUrl = Uri.parse(item.VideoEntero)
                 updateBackground(backgroundImageUrl.toString())
             }
         }
     }
     private fun updateBackground(uri: String) {
-        val width = metrics.widthPixels
-        val height =  metrics.heightPixels
-        val options = RequestOptions()
-            .centerCrop()
-            .error(defaultBackground)
-
-        Glide.with(this)
-            .asBitmap()
-            .load(uri)
-            .apply(options)
-            .into(object: SimpleTarget<Bitmap>(width, height) {
-                override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap>?
-                ) {
-                    backgroundManager.setBitmap(resource)
-                }
-            })
+        activity?.videoDeFondo?.prepare(Uri.parse("$uri"))
+//        val width = metrics.widthPixels
+//        val height =  metrics.heightPixels
+//        val options = RequestOptions()
+//            .centerCrop()
+//            .error(defaultBackground)
+//
+//        Glide.with(this)
+//            .asBitmap()
+//            .load(uri)
+//            .apply(options)
+//            .into(object: SimpleTarget<Bitmap>(width, height) {
+//                override fun onResourceReady(
+//                    resource: Bitmap,
+//                    transition: Transition<in Bitmap>?
+//                ) {
+//                    backgroundManager.setBitmap(resource)
+//                }
+//            })
     }
 }

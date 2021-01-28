@@ -25,14 +25,14 @@ class WebView: FragmentActivity() {
         val titulo = this.intent.getStringExtra("titulo").toString()
         val url = this.intent.getStringExtra("url").toString()
         //webview.settings.javaScriptEnabled = true
-        textView_title.text = titulo
+        //textView_title.text = titulo
         webview.webViewClient = WebViewClient()
         webview.loadUrl(url)
 
-        button_back.setOnClickListener {
-            val intent = Intent(this, DetailActivity::class.java)
-            startActivity(intent)
-        }
+//        button_back.setOnClickListener {
+//            val intent = Intent(this, DetailActivity::class.java)
+//            startActivity(intent)
+//        }
 
     }
 }

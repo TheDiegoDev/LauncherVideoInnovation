@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/browse_fragment"
+    <guinea.diego.launchervideoinnovation.ui.presenter.ExoPlayerView
+        android:id="@+id/videoDeFondo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="guinea.diego.launchervideoinnovation.ui.home.BrowserFragment" />
+        android:background="#000000" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/browse_fragment"
+        android:name="guinea.diego.launchervideoinnovation.ui.home.BrowserFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.fragment.app.FragmentContainerView>
 
 
 </FrameLayout>
