@@ -17,13 +17,13 @@
     <application
         android:name=".di.KoinApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/speed"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/speed"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
-        android:banner="@mipmap/telefonica">
+        android:banner="@mipmap/ic_banner_m">
         <activity
             android:name=".ui.home.HomeActivity"
             android:label="@string/app_name"
