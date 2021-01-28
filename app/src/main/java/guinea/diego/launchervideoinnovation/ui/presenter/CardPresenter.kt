@@ -43,7 +43,7 @@ class CardPresenter : Presenter() {
         val imageCardView = ImageCardView(parent?.context)
         imageCardView.focusable = View.FOCUSABLE
         imageCardView.isFocusableInTouchMode = true
-        imageCardView.findViewById<TextView>(R.id.content_text).horizontalScrollbarTrackDrawable
+    //    imageCardView.findViewById<TextView>(R.id.content_text).horizontalScrollbarTrackDrawable
         imageCardView.findViewById<TextView>(R.id.content_text).setTextColor(Color.WHITE)
         //Scroll del content
 
