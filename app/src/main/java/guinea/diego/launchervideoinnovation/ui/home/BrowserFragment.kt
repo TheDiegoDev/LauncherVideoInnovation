@@ -184,6 +184,7 @@ class BrowserFragment : BrowseSupportFragment() {
                 val backgroundImageUrl = Uri.parse(item.VideoEntero)
                 updateBackground(backgroundImageUrl.toString())
             }
+
         }
     }
     private fun updateBackground(uri: String) {
