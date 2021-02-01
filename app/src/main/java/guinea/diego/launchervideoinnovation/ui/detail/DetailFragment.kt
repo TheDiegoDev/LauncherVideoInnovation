@@ -1,18 +1,23 @@
 package guinea.diego.launchervideoinnovation.ui.detail
 
+import android.Manifest
+import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.widget.Toast
-import androidx.browser.customtabs.CustomTabsIntent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.DetailsFragment
 import androidx.leanback.widget.*
@@ -23,10 +28,8 @@ import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailOverviewLogoPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailsDescriptionPresenter
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity.Companion.SHARED_ELEMENT_NAME
-import guinea.diego.launchervideoinnovation.ui.home.HomeActivity
 import guinea.diego.launchervideoinnovation.ui.playback.PlaybackActivity
 import guinea.diego.launchervideoinnovation.ui.webView.WebView
-import kotlinx.coroutines.awaitCancellation
 
 
 class DetailFragment: DetailsFragment() {
@@ -34,6 +37,7 @@ class DetailFragment: DetailsFragment() {
     companion object {
         const val ACTION_WATCH_TRAILER = 1
     }
+    private lateinit var c: Context
 
     private lateinit var backgroundManager: BackgroundManager
     private lateinit var metrics: DisplayMetrics
@@ -89,7 +93,15 @@ class DetailFragment: DetailsFragment() {
                     intent.putExtra("titulo", proyectos.titulo)
                     intent.putExtra("url", proyectos.accion)
                     startActivity(intent)
-                }else {
+                }else if(proyectos.categoria == "Proyectos"){
+                    if(checkSelfPermission(activity,Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED){
+                        requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
+                    }else{
+                        downloadFile()
+                    }
+
+                }else{
                     val intent = Intent(activity, PlaybackActivity::class.java)
                     intent.putExtra("videoUrl", proyectos.VideoEntero)
                     startActivity(intent)
@@ -105,6 +117,22 @@ class DetailFragment: DetailsFragment() {
         presenterSelector.addClassPresenter(ListRow::class.java, ListRowPresenter())
         mAdapter = ArrayObjectAdapter(presenterSelector)
         adapter = mAdapter
+    }
+
+    private fun downloadFile() {
+       val request = DownloadManager.Request(Uri.parse(proyectos.accion))
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+        request.setTitle(proyectos.titulo)
+        request.setDescription(proyectos.descripcion)
+
+        request.allowScanningByMediaScanner()
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"${System.currentTimeMillis()}")
+
+        val manager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        manager.enqueue(request)
+
+        Toast.makeText(activity, "Download ${proyectos.titulo}", Toast.LENGTH_LONG ).show()
     }
 
     private fun setupDetailsOverviewRow() {
