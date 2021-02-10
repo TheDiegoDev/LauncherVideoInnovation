@@ -189,23 +189,5 @@ class BrowserFragment : BrowseSupportFragment() {
     }
     private fun updateBackground(uri: String) {
         activity?.videoDeFondo?.prepare(Uri.parse("$uri"))
-//        val width = metrics.widthPixels
-//        val height =  metrics.heightPixels
-//        val options = RequestOptions()
-//            .centerCrop()
-//            .error(defaultBackground)
-//
-//        Glide.with(this)
-//            .asBitmap()
-//            .load(uri)
-//            .apply(options)
-//            .into(object: SimpleTarget<Bitmap>(width, height) {
-//                override fun onResourceReady(
-//                    resource: Bitmap,
-//                    transition: Transition<in Bitmap>?
-//                ) {
-//                    backgroundManager.setBitmap(resource)
-//                }
-//            })
     }
 }
