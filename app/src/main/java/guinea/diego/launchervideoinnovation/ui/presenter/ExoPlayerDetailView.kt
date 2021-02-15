@@ -13,32 +13,32 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
-class ExoPlayerView @JvmOverloads constructor(
+class ExoPlayerDetailView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defSystem: Int = 0
 )
-    :FrameLayout(context, attrs, defSystem), Player.EventListener {
+    : FrameLayout(context, attrs, defSystem), Player.EventListener {
 
-        private var simpleExoPlayer: SimpleExoPlayer
+    private var simpleExoPlayer: SimpleExoPlayer
 
-        init {
-            val playerView = PlayerView(context)
-            playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-            playerView.useController = false
-            addView(playerView)
+    init {
+        val playerView = PlayerView(context)
+        //playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+        playerView.useController = true
+        addView(playerView)
 
-            simpleExoPlayer = SimpleExoPlayer.Builder(context).build()
-            simpleExoPlayer.addListener(this)
-            simpleExoPlayer.playWhenReady = true
-            playerView.player = simpleExoPlayer
-            simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE
-        }
+        simpleExoPlayer = SimpleExoPlayer.Builder(context).build()
+        simpleExoPlayer.addListener(this)
+        simpleExoPlayer.playWhenReady = true
+        playerView.player = simpleExoPlayer
+        simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+    }
+
     fun prepare(uri: Uri){
 
         val timeout = 10000

@@ -52,20 +52,17 @@ class DetailFragment: DetailsFragment() {
 
     companion object {
         const val ACTION_WATCH_TRAILER = 1
-        const val ACTION_RENT = 2
     }
-//    private var downloadBar = activity.findViewById<ProgressBar>(R.id.progressBar)
+
     private lateinit var backgroundManager: BackgroundManager
     private lateinit var metrics: DisplayMetrics
     private lateinit var proyectos: Proyectos
     private lateinit var mAdapter: ArrayObjectAdapter
     private lateinit var mButton: String
-    private lateinit var install: String
     private var defaultBackground: Drawable? = null
     private val objetos: ArrayList<Proyectos> = arrayListOf()
     private lateinit var tituloApk: String
     private lateinit var fullPath : String
-    private var loadingDialog: Dialog? = null
     private val installMLD = MutableLiveData<Boolean>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -76,19 +73,6 @@ class DetailFragment: DetailsFragment() {
         setupListener()
     }
 
-//    private fun showDialog() {
-//        hideLoading()
-//        loadingDialog = activity?.showLoadingDialog()
-//    }
-//    private fun hideLoading() {
-//        loadingDialog?.let { if (it.isShowing) it.cancel() }
-//    }
-//    private fun stopAnimacion() {
-//        Handler().postDelayed({
-//            hideLoading()
-//        }, 1)
-//    }
-
     private fun prepareBackgroundManager() {
         backgroundManager = BackgroundManager.getInstance(activity)
         backgroundManager.attach(activity.window)
@@ -98,11 +82,6 @@ class DetailFragment: DetailsFragment() {
     }
 
     private fun setupView() {
-//        if(checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-//            PackageManager.PERMISSION_DENIED ){
-//            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1000)
-//            //requestPermissions(arrayOf(Manifest.permission.REQUEST_INSTALL_PACKAGES), 1000)
-//        }
         permissionsInstall()
         setupAdapter()
         setupDetailsOverviewRow()
@@ -143,8 +122,7 @@ class DetailFragment: DetailsFragment() {
                     downloadFile()
                     Handler().postDelayed({
                         installAPK()
-                    }, 5000)
-
+                    }, 8000)
                 }else{
                     val intent = Intent(activity, PlaybackActivity::class.java)
                     intent.putExtra("videoUrl", proyectos.VideoEntero)
@@ -158,7 +136,6 @@ class DetailFragment: DetailsFragment() {
                 }else{
                     Toast.makeText(activity, it.toString(), Toast.LENGTH_SHORT).show()
                 }
-
             }
         }
 
@@ -225,17 +202,12 @@ class DetailFragment: DetailsFragment() {
 
         val manager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         manager.enqueue(request)
-
-        //installAPK()
-       // Toast.makeText(activity, "Download $uri", Toast.LENGTH_LONG).show()
     }
 
     private fun installAPK() {
 
         val file = File(fullPath)
 
-        //installMLD.observe( HomeActivity().detail_fragment.viewLifecycleOwner, Observer {
-           // Toast.makeText(activity.applicationContext,"entro dentro", Toast.LENGTH_LONG).show()
             if (file.exists()) {
                 activity.downloadAnimacion.visibility = View.INVISIBLE
                 val intent = Intent(Intent.ACTION_VIEW)
@@ -256,8 +228,6 @@ class DetailFragment: DetailsFragment() {
             } else {
                  Toast.makeText(activity.applicationContext,"Descaregando paquetes...", Toast.LENGTH_LONG).show()
             }
-       // })
-       // Toast.makeText(activity.applicationContext,"Noooo entro", Toast.LENGTH_LONG).show()
     }
 
     private fun uriFromFile(context: Context?, file: File?): Uri? {
@@ -300,20 +270,6 @@ class DetailFragment: DetailsFragment() {
                 ""
             )
         )
-//        if (proyectos.categoria == "Proyectos"){
-//            actionAdapter.set(
-//                ACTION_RENT,
-//                Action(
-//                    ACTION_RENT.toLong(),
-//                    "Instalar",
-//                    ""
-//                )
-//            )
-//        }
-//        actionAdapter.set(ACTION_BUY,
-//                Action(ACTION_BUY.toLong(),
-//                        getString(R.string.buy_1),
-//                        getString(R.string.buy_2)))
         detailsOverviewRow.actionsAdapter = actionAdapter
         mAdapter.add(detailsOverviewRow)
     }

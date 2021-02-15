@@ -3,6 +3,7 @@ package guinea.diego.launchervideoinnovation.ui.presenter
 
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
@@ -43,9 +44,13 @@ class CardPresenter : Presenter() {
         val imageCardView = ImageCardView(parent?.context)
         imageCardView.focusable = View.FOCUSABLE
         imageCardView.isFocusableInTouchMode = true
-    //    imageCardView.findViewById<TextView>(R.id.content_text).horizontalScrollbarTrackDrawable
         imageCardView.findViewById<TextView>(R.id.content_text).setTextColor(Color.WHITE)
         //Scroll del content
+        imageCardView.findViewById<TextView>(R.id.content_text).setSingleLine()
+        imageCardView.findViewById<TextView>(R.id.content_text).ellipsize = TextUtils.TruncateAt.MARQUEE
+        imageCardView.findViewById<TextView>(R.id.content_text).marqueeRepeatLimit
+        imageCardView.findViewById<TextView>(R.id.content_text).focusable
+        imageCardView.findViewById<TextView>(R.id.content_text).isFocusableInTouchMode
 
         return MyViewHolder(imageCardView)
     }
