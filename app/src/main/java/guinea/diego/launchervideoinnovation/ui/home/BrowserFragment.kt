@@ -29,7 +29,6 @@ import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.data.models.Values
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
 import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
-import guinea.diego.launchervideoinnovation.ui.presenter.ExoPlayerView
 import guinea.diego.launchervideoinnovation.ui.presenter.IconHeaderItemPresenter
 import guinea.diego.launchervideoinnovation.utils.Constants.TITLE_BROWSER
 import kotlinx.android.synthetic.main.activity_main.*
@@ -167,6 +166,7 @@ class BrowserFragment : BrowseSupportFragment() {
     }
 
     private fun prepareBackgroundManager() {
+       // activity?.textDescripcion?.text = ""
     //  activity?.videoDeFondo?.prepare(Uri.parse("https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"))
 //        backgroundManager = BackgroundManager.getInstance(activity)
 ////        backgroundManager.attach(activity?.window)
@@ -181,7 +181,7 @@ class BrowserFragment : BrowseSupportFragment() {
             rowViewHolder: RowPresenter.ViewHolder?,
             row: Row?) {
             if(item is Proyectos) {
-                val backgroundImageUrl = Uri.parse(item.VideoEntero)
+                val backgroundImageUrl = Uri.parse(item.VideoPresentacion)
                 updateBackground(backgroundImageUrl.toString())
             }
 

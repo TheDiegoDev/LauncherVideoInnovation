@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <guinea.diego.launchervideoinnovation.ui.presenter.ExoPlayerView
+        android:layout_gravity="right"
         android:id="@+id/videoDeFondo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
