@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import android.webkit.WebViewClient
+import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import guinea.diego.launchervideoinnovation.R
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity
@@ -22,6 +23,7 @@ class WebView: FragmentActivity() {
     }
 
     private fun setView(){
+        val close_btn = findViewById<Button>(R.id.web_close)
         val titulo = this.intent.getStringExtra("titulo").toString()
         val url = this.intent.getStringExtra("url").toString()
         //webview.settings.javaScriptEnabled = true
@@ -29,10 +31,9 @@ class WebView: FragmentActivity() {
         webview.webViewClient = WebViewClient()
         webview.loadUrl(url)
 
-//        button_back.setOnClickListener {
-//            val intent = Intent(this, DetailActivity::class.java)
-//            startActivity(intent)
-//        }
+        close_btn.setOnClickListener {
+           finish()
+        }
 
     }
 }

@@ -10,6 +10,7 @@
 
     <color name="colorTransparente">#45005FD3</color>
     <color name="colorNoTransparente">#DC023E87</color>
+    <color name="backgroudnDownload">#7A000000</color>
 
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>

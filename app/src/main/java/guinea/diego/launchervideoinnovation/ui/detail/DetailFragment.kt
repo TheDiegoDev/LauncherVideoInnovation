@@ -3,7 +3,9 @@ package guinea.diego.launchervideoinnovation.ui.detail
 import android.Manifest
 import android.app.Dialog
 import android.app.DownloadManager
+import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,12 +20,14 @@ import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
+import androidx.core.content.contentValuesOf
 import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.DetailsFragment
 import androidx.leanback.widget.*
@@ -37,15 +41,18 @@ import guinea.diego.launchervideoinnovation.R
 import guinea.diego.launchervideoinnovation.data.models.Proyectos
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity.Companion.KEY_VIDEO
 import guinea.diego.launchervideoinnovation.ui.detail.DetailActivity.Companion.SHARED_ELEMENT_NAME
-import guinea.diego.launchervideoinnovation.ui.home.HomeActivity
 import guinea.diego.launchervideoinnovation.ui.playback.PlaybackActivity
 import guinea.diego.launchervideoinnovation.ui.presenter.CardPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailOverviewLogoPresenter
 import guinea.diego.launchervideoinnovation.ui.presenter.DetailsDescriptionPresenter
 import guinea.diego.launchervideoinnovation.ui.webView.WebView
 import kotlinx.android.synthetic.main.activity_detail.*
-import okhttp3.internal.wait
+import retrofit2.http.Url
 import java.io.File
+import java.lang.reflect.Array
+import java.net.URL
+import java.net.HttpURLConnection as HttpURLConnection
+import kotlin.Array as Array1
 
 
 class DetailFragment: DetailsFragment() {
@@ -58,12 +65,11 @@ class DetailFragment: DetailsFragment() {
     private lateinit var metrics: DisplayMetrics
     private lateinit var proyectos: Proyectos
     private lateinit var mAdapter: ArrayObjectAdapter
-    private lateinit var mButton: String
+    private  var mButton =  MutableLiveData<String>()
     private var defaultBackground: Drawable? = null
     private val objetos: ArrayList<Proyectos> = arrayListOf()
     private lateinit var tituloApk: String
     private lateinit var fullPath : String
-    private val installMLD = MutableLiveData<Boolean>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -74,6 +80,7 @@ class DetailFragment: DetailsFragment() {
     }
 
     private fun prepareBackgroundManager() {
+
         backgroundManager = BackgroundManager.getInstance(activity)
         backgroundManager.attach(activity.window)
         defaultBackground = ContextCompat.getDrawable(activity, R.drawable.default_background)
@@ -85,7 +92,7 @@ class DetailFragment: DetailsFragment() {
         permissionsInstall()
         setupAdapter()
         setupDetailsOverviewRow()
-        setupVideoListRow()
+       // setupVideoListRow()
     }
 
     private fun setupListener() {
@@ -119,10 +126,7 @@ class DetailFragment: DetailsFragment() {
                     intent.putExtra("url", proyectos.accion)
                     startActivity(intent)
                 }else if(proyectos.categoria == "Proyectos"){
-                    downloadFile()
-                    Handler().postDelayed({
-                        installAPK()
-                    }, 8000)
+                    comprobarPaquete()
                 }else{
                     val intent = Intent(activity, PlaybackActivity::class.java)
                     intent.putExtra("videoUrl", proyectos.VideoEntero)
@@ -146,9 +150,65 @@ class DetailFragment: DetailsFragment() {
         adapter = mAdapter
     }
 
-    private fun comprobarPaquete(): Boolean {
+    private fun progress(){
+
+//        val dialog = Dialog(context)
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        dialog.setContentView(R.layout.activity_detail)
+//        dialog.setTitle(proyectos.titulo)
+//
+//        dialog.show()
+//
+//        activity.downloadProgress.progress = 0F
+        val prog = ProgressDialog(context)
+        prog.setTitle(proyectos.titulo)
+        prog.setMessage("Wait for Sometime")
+        prog.max = 100
+        prog.closeOptionsMenu()
+        prog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+        prog.show()
+
+        Thread(Runnable(){
+            var i = 0
+            while (i<=100){
+                prog.progress = i
+                i++
+                if (i == 100){
+                    prog.dismiss()
+                }
+                Thread.sleep(100)
+            }
+        }).start()
+
+    }
+
+    private fun comprobarPaquete() {
+        val paquete = "com.govideo.livinappplayer"
+        val pm = activity.applicationContext.packageManager
         val file = File(fullPath)
-        return file.exists()
+
+        val openApk = pm.getLaunchIntentForPackage(paquete)
+        openApk?.addCategory(Intent.CATEGORY_LAUNCHER)
+        openApk?.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        openApk?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        val launchIntent = activity.applicationContext.packageManager.getLaunchIntentForPackage("com.mobisystems.fileman")
+        launchIntent?.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        try {
+            if (file.exists()) {
+               // openApk.setDataAndType(, "application/vnd.android.package-archive");
+                   launchIntent?.let {startActivity(launchIntent)}?: kotlin.run { Log.d("Prueba", "no existe") }
+               //Intent.createChooser(openApk, "Open")
+            } else{
+                downloadFile()
+                Handler().postDelayed({
+                    installAPK()
+                }, 8000)
+            }
+        } catch (ex: Exception) {
+            Log.d("Prueba1", "${ex.localizedMessage}", ex)
+            Toast.makeText(context, " No Application is found to open this file.", Toast.LENGTH_LONG).show()
+        }
     }
     private fun permissionsInstall(){
         //installtion permission
@@ -184,9 +244,10 @@ class DetailFragment: DetailsFragment() {
     }
 
     private fun downloadFile() {
-        activity.downloadAnimacion.visibility = View.VISIBLE
-        //showDialog()
-      // activity.downloadBar.visibility = View.VISIBLE
+
+        activity.viewDownload.visibility = View.VISIBLE
+        progress()
+       // activity.downloadAnimacion.visibility = View.VISIBLE
 
         val request = DownloadManager.Request(Uri.parse(proyectos.accion))
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
@@ -202,14 +263,45 @@ class DetailFragment: DetailsFragment() {
 
         val manager = activity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         manager.enqueue(request)
+
+        ///////
+
+//        var downloadSize = 0
+//        val url = URL(proyectos.accion)
+//        val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+//
+//        urlConnection.requestMethod = "GET"
+//        urlConnection.doOutput = true
+//        urlConnection.connect()
+//
+//        val inputStream = urlConnection.inputStream
+//        val totalSize = urlConnection.contentLength
+//
+//        Thread(Runnable(){
+//            activity.downloadProgress.progressMax = totalSize.toFloat()
+//        }).start()
+//
+//        val buffer = ByteArray(124)
+//        var bufferLength = 0
+//
+//        while ((inputStream.read(buffer).also { bufferLength = it }) > 0) {
+//            downloadSize += bufferLength
+//            Thread(Runnable(){
+//                activity.downloadProgress.progress = downloadSize.toFloat()
+//            }).start()
+//        }
+
+        ////////
+
+
     }
 
     private fun installAPK() {
-
         val file = File(fullPath)
 
             if (file.exists()) {
-                activity.downloadAnimacion.visibility = View.INVISIBLE
+                activity.viewDownload.visibility = View.INVISIBLE
+               // activity.downloadAnimacion.visibility = View.INVISIBLE
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(
                     uriFromFile(
@@ -226,7 +318,11 @@ class DetailFragment: DetailsFragment() {
                     Log.e("TAG", "Error in opening the file!")
                 }
             } else {
-                 Toast.makeText(activity.applicationContext,"Descaregando paquetes...", Toast.LENGTH_LONG).show()
+                 Toast.makeText(
+                     activity.applicationContext,
+                     "Descaregando paquetes...",
+                     Toast.LENGTH_LONG
+                 ).show()
             }
     }
 
@@ -266,7 +362,7 @@ class DetailFragment: DetailsFragment() {
             ACTION_WATCH_TRAILER,
             Action(
                 ACTION_WATCH_TRAILER.toLong(),
-                mButton,
+                mButton.value,
                 ""
             )
         )
@@ -300,18 +396,23 @@ class DetailFragment: DetailsFragment() {
         proyectos = Proyectos(id, titulo, descripcion, categoria, videoP, videoE, foto, accion)
         tituloApk = proyectos.titulo?.replace("\\s".toRegex(), "").toString()
         fullPath =  activity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/$tituloApk.apk"
-        installMLD.value = comprobarPaquete()
         confgButton()
         proyectos.foto?.let { updateBackground(it) }
     }
 
     private fun confgButton() {
         if(proyectos.categoria == "Noticias"){
-            mButton = "Ver Noticia"
+            mButton.value = "Ver Noticia"
         }else if (proyectos.categoria == "Videos"){
-            mButton = "Reproducir"
+            mButton.value = "Reproducir"
         }else{
-            mButton = "Descargar"
+            val file = File(fullPath)
+            if (file.exists()){
+                mButton.value = "Abrir"
+            }else{
+                mButton.value = "Descargar"
+            }
+
         }
 
     }
