@@ -23,7 +23,6 @@ class PlaybackActivity: FragmentActivity() {
     private fun closeAct(){
         val close_btn = findViewById<Button>(R.id.exo_close)
         close_btn.setOnClickListener {
-            Log.i("CIERRA", "NOCIERRA")
             finish()
         }
     }
