@@ -1,8 +1,10 @@
-# LauncherVideoInnovation
+# LauncherVideoInnovation AndroidTV
 
 # Detalles 
 
-Esta aplicacion tipo launcher usa las siguientes librerias : 
+Esta aplicacion tipo launcher desarollada durante las practicas en Telefonica con la fundacion FUE es una aplicacion para AndroidTV.
+
+Usa las siguientes librerias : 
 
 - Leanback
 - Glide
